@@ -1,0 +1,8 @@
+MI_ESTIMATOR:
+    method: InfoNCE
+
+FF:
+    ff_residual_connection: False
+    ff_activation: 'tanh'
+    ff_layers: 1
+    ff_layer_norm: False

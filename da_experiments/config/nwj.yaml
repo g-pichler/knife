@@ -1,0 +1,10 @@
+MI_ESTIMATOR:
+    method: NWJ
+    nwj_measure: JSD
+
+
+FF:
+    ff_residual_connection: False
+    ff_activation: 'tanh'
+    ff_layers: 1
+    ff_layer_norm: False

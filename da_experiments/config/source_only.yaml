@@ -1,0 +1,4 @@
+GENERAL:
+    source_only: True
+    num_updates: 15000
+    method: 'source_only'

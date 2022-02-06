@@ -1,0 +1,10 @@
+MI_ESTIMATOR:
+    method: SMILE
+    clip: 5
+LOSS:
+    lambda_c: 0.1
+FF:
+    ff_residual_connection: False
+    ff_activation: 'relu'
+    ff_layers: 1
+    ff_layer_norm: True

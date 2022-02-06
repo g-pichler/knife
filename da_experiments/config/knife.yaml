@@ -1,0 +1,15 @@
+MI_ESTIMATOR:
+    method: 'KNIFE'
+    average: 'var'  # un
+    cov_diagonal: 'var'  # diagonal of the covariance
+    cov_off_diagonal: 'var'  # var
+    simu_params: ['source_data', 'target_data', 'method', 'optimize_mu']
+    cond_modes: 128
+    marg_modes: 128
+    use_tanh: True
+    init_std: 0.01
+
+FF:
+    ff_residual_connection: False
+    ff_activation: 'relu'
+    ff_layer_norm: True

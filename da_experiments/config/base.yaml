@@ -1,0 +1,40 @@
+GENERAL:
+    seed: 1
+    eval_freq: 500
+    print_freq: 10
+    res_dir: results
+    visu_dir: data_visu
+    visu: False
+    simu_params: ['source_data', 'target_data', 'method']
+    debug: False
+    source_only: False
+
+MODEL:
+    feature_extractor: basic
+    dropout: 0.5
+    mi_net_latent_dim: 64
+    latent_dim_d: 64
+    ef_dim: 64
+
+DATA:
+    source_data: MNIST # MNIST, MNISTM, USPS, SVHN, CIFAR10, STL10
+    target_data: MNISTM
+    data_path: data
+    batch_size: 128
+    num_workers: 3
+
+LOSS:
+    lambda_c: 0.1
+
+MI_ESTIMATOR:
+    method: knife # knife, mine, nwj, club, club_sample, info_nce
+
+TRAINING:
+    num_updates: 25000
+    context_lr: 0.001
+    domain_lr: 0.001
+    mi_lr: 0.001
+    optimizer: Adam
+
+DISTRIBUTED:
+    gpus: [0]
