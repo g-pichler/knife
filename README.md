@@ -25,8 +25,6 @@ We start by giving an overview of the proposed estimates.
 
 
 
-This statistical measure has been tested on Data2text and Summarization.
-
 
 ## References
 
