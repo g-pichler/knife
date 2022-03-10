@@ -33,7 +33,11 @@ This statistical measure has been tested on Data2text and Summarization.
 If you find this repo useful, please cite our paper:
 
 ```
-@article{
+@article{pichler2022knife,
+  title={KNIFE: Kernelized-Neural Differential Entropy Estimation},
+  author={Pichler, Georg and Colombo, Pierre and Boudiaf, Malik and Koliander, Gunther and Piantanida, Pablo},
+  journal={arXiv preprint arXiv:2202.06618},
+  year={2022}
 }
 ```
 
