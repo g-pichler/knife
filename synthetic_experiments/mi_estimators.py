@@ -239,6 +239,32 @@ class MINE(nn.Module):
     def learning_loss(self, x_samples, y_samples):
         return -self.forward(x_samples, y_samples)
 
+    
+    
+class TUBA(nn.Module):
+    def __init__(self, x_dim, y_dim, hidden_size):
+        super(TUBA, self).__init__()
+        self.F_func = nn.Sequential(nn.Linear(x_dim + y_dim, hidden_size),
+                                    nn.ReLU(),
+                                    nn.Linear(hidden_size, 1))
+        self.baseline = nn.Linear(y_dim,1) 
+
+    def forward(self, x_samples, y_samples):
+        # shuffle and concatenate
+        log_scores = self.baseline(y_samples)
+        sample_size = y_samples.shape[0]
+
+        x_tile = x_samples.unsqueeze(0).repeat((sample_size, 1, 1))
+        y_tile = y_samples.unsqueeze(1).repeat((1, sample_size, 1))
+
+        T0 = self.F_func(torch.cat([x_samples, y_samples], dim=-1))
+        T1 = self.F_func(torch.cat([x_tile, y_tile], dim=-1))  # shape [sample_size, sample_size, 1]
+
+        lower_bound = 1 +  T0.mean() - log_scores.mean()  - ((T1 - log_scores).logsumexp(dim=1)- np.log(sample_size)).exp().mean() 
+        return lower_bound
+
+    def learning_loss(self, x_samples, y_samples):
+        return -self.forward(x_samples, y_samples)
 
 class NWJ(nn.Module):
     def __init__(self, x_dim, y_dim, hidden_size):
@@ -663,7 +689,7 @@ def main(cubic=True):
     # import os
     # os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 
-    for seed in [1, 2, 3, 4, 5, 6, 7, 8]:
+    for seed in [1, 2 ,3, 4, 5, 6, 7, 8]:
         set_seed(seed)
         lambda_ = 2
 
@@ -677,9 +703,8 @@ def main(cubic=True):
         batch_size = 128
         hidden_size = 15
         learning_rate = 0.001
-        training_steps = 8000
-        model_list = [
-            "KNIFE", "CLUB", "DOE", "InfoNCE", "MINE", 'NWJ', "KNIFE"]  # CLUBSample
+        training_steps = 5000
+        model_list = ["TUBA", "KNIFE"]  # CLUBSample
 
         mi_list = [2.0, 4.0, 6.0, 8.0, 10.0]  # , 12.0, 14.0, 16.0, 18.0, 20.0]
 
@@ -760,7 +785,7 @@ def main(cubic=True):
             mis_smooth = pd.Series(mi_results[model_name]).ewm(span=EMA_SPAN).mean()
 
             if i == 0:
-                plt.plot(mis_smooth, c=p1.get_color(), label='$\hat I$')
+                plt.plot(mis_smooth, c=p1.get_color(), label='$\\hat{I}$')
                 plt.plot(yaxis_mi, color='k', label='True')
                 plt.xlabel('Steps', fontsize=25)
                 plt.ylabel('MI', fontsize=25)
@@ -782,7 +807,7 @@ def main(cubic=True):
             # plt.subplots_adjust( )
 
         plt.gcf().tight_layout()
-        plt.savefig('mi_est_Gaussian_{}.pdf'.format(suffix), bbox_inches=None)
+        plt.savefig('mi_est_Gaussian_{}_copy.pdf'.format(suffix), bbox_inches=None)
         # plt.show()
 
         print('Second part')
