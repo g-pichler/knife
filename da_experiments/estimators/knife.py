@@ -25,6 +25,10 @@ class KNIFE(nn.Module):
 
 
 class MargKernel(nn.Module):
+    """
+    Used to compute p(z_d)
+    """
+
     def __init__(self, args, zc_dim, zd_dim, init_samples=None):
 
         self.optimize_mu = args.optimize_mu
@@ -91,6 +95,9 @@ class MargKernel(nn.Module):
 
 
 class CondKernel(nn.Module):
+    """
+    Used to compute p(z_d | z_c)
+    """
 
     def __init__(self, args, zc_dim, zd_dim, layers=1):
         super(CondKernel, self).__init__()
@@ -98,16 +105,16 @@ class CondKernel(nn.Module):
         self.use_tanh = args.use_tanh
         self.logC = torch.tensor([-self.d / 2 * np.log(2 * np.pi)])
 
-        self.mu = FF(args, self.d, self.d, self.K * self.d)
-        self.logvar = FF(args, self.d, self.d, self.K * self.d)
+        self.mu = FF(args, zc_dim, self.d, self.K * zd_dim)
+        self.logvar = FF(args, zc_dim, self.d, self.K * zd_dim)
 
-        self.weight = FF(args, self.d, self.d, self.K)
+        self.weight = FF(args, zc_dim, self.d, self.K)
         self.tri = None
         if args.cov_off_diagonal == 'var':
-            self.tri = FF(args, self.d, self.d, self.K * self.d * self.d)
+            self.tri = FF(args, zc_dim, self.d, self.K * zd_dim ** 2)
         self.zc_dim = zc_dim
 
-    def logpdf(self, z_c, z_d):  # H(X|Y)
+    def logpdf(self, z_c, z_d):  # H(z_d|z_c)
 
         z_d = z_d[:, None, :]  # [N, 1, d]
 
