@@ -29,7 +29,7 @@ class MargKernel(nn.Module):
 
         self.optimize_mu = args.optimize_mu
         self.K = args.marg_modes if self.optimize_mu else args.batch_size
-        self.d = zc_dim
+        self.d = zd_dim
         self.use_tanh = args.use_tanh
         self.init_std = args.init_std
         super(MargKernel, self).__init__()
